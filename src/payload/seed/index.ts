@@ -103,34 +103,52 @@ export const seed = async ({
       name: 'Demo Author',
       email: 'demo-author@payloadcms.com',
       password: 'password',
+      roles: ['author'],
     },
     req,
   })
+
+  const admins = await payload.find({
+    collection: 'users',
+    where: {
+      roles: {
+        contains: 'admin',
+      },
+    },
+    pagination: false,
+    limit: 1,
+  })
+
+  let adminId: number | null = null
+
+  if (admins.docs.length === 0) {
+    adminId = admins.docs.at(0).id
+  }
 
   let demoAuthorID: number | string = demoAuthor.id
 
   payload.logger.info(`— Seeding media...`)
   const image1Doc = await payload.create({
     collection: 'media',
-    data: image1,
+    data: { ...image1, createdBy: demoAuthorID },
     filePath: path.resolve(dirname, 'image-post1.webp'),
     req,
   })
   const image2Doc = await payload.create({
     collection: 'media',
-    data: image2,
+    data: { ...image2, createdBy: demoAuthorID },
     filePath: path.resolve(dirname, 'image-post2.webp'),
     req,
   })
   const image3Doc = await payload.create({
     collection: 'media',
-    data: image2,
+    data: { ...image2, createdBy: demoAuthorID },
     filePath: path.resolve(dirname, 'image-post3.webp'),
     req,
   })
   const imageHomeDoc = await payload.create({
     collection: 'media',
-    data: image2,
+    data: { ...image2, createdBy: adminId || demoAuthorID },
     filePath: path.resolve(dirname, 'image-hero1.webp'),
     req,
   })

@@ -8,19 +8,23 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { adminsAndCreator } from '../access/adminsAndCreator'
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { populateCreatedBy } from '../hooks/populateCreatedBy'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  hooks: {
+    beforeChange: [populateCreatedBy],
+  },
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: adminsAndCreator,
+    delete: adminsAndCreator,
     read: anyone,
-    update: authenticated,
+    update: adminsAndCreator,
   },
   fields: [
     {
@@ -36,6 +40,11 @@ export const Media: CollectionConfig = {
           return [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()]
         },
       }),
+    },
+    {
+      name: 'createdBy',
+      type: 'relationship',
+      relationTo: 'users',
     },
   ],
   upload: {

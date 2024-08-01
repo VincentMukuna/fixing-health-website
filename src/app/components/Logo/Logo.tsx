@@ -1,12 +1,10 @@
-import React from 'react'
+import { HeartPulseIcon } from 'lucide-react'
 
 export const Logo = () => {
   return (
-    /* eslint-disable @next/next/no-img-element */
-    <img
-      alt="Payload Logo"
-      className="max-w-[9.375rem] invert dark:invert-0"
-      src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/payload/src/admin/assets/images/payload-logo-light.svg"
-    />
+    <div className=" inline-flex gap-1 items-center">
+      <HeartPulseIcon size={24} />
+      <span className="font-bold text-xl italic">Fixing Health</span>
+    </div>
   )
 }

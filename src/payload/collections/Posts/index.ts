@@ -9,7 +9,6 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Banner } from '../../blocks/Banner'
 import { Code } from '../../blocks/Code'
@@ -26,14 +25,18 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+import { checkRole } from 'src/payload/access/checkRole'
+import adminsAndAuthors from './access/adminsAndAuthors'
+import adminsAndCreators from './access/adminsAndCreators'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    admin: ({ req: { user } }) => checkRole(['admin'], user),
+    create: adminsAndCreators,
+    delete: adminsAndAuthors,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: adminsAndAuthors,
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],

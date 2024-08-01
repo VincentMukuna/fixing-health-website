@@ -12,14 +12,18 @@ import {
   HeadingFeature,
   ItalicFeature,
   LinkFeature,
+  UnderlineFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import sharp from 'sharp' // editor-import
-import { UnderlineFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp' // editor-import
 import { fileURLToPath } from 'url'
 
+import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import { Page, Post } from 'src/payload-types'
+import admin from './payload/access/admin'
+import { anyone } from './payload/access/anyone'
 import Categories from './payload/collections/Categories'
 import { Media } from './payload/collections/Media'
 import { Pages } from './payload/collections/Pages'
@@ -31,8 +35,6 @@ import { seed } from './payload/endpoints/seed'
 import { Footer } from './payload/globals/Footer/Footer'
 import { Header } from './payload/globals/Header/Header'
 import { revalidateRedirects } from './payload/hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { Page, Post } from 'src/payload-types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -166,6 +168,12 @@ export default buildConfig({
         payment: false,
       },
       formOverrides: {
+        access: {
+          read: anyone,
+          create: admin,
+          update: admin,
+          delete: admin,
+        },
         fields: ({ defaultFields }) => {
           return defaultFields.map((field) => {
             if ('name' in field && field.name === 'confirmationMessage') {
@@ -184,6 +192,14 @@ export default buildConfig({
             }
             return field
           })
+        },
+      },
+      formSubmissionOverrides: {
+        access: {
+          read: admin,
+          create: anyone,
+          update: admin,
+          delete: admin,
         },
       },
     }),
