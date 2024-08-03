@@ -32,8 +32,13 @@ export const AdminBar: React.FC<{
   const [show, setShow] = useState(false)
   const collection = collectionLabels?.[segments?.[1]] ? segments?.[1] : 'pages'
 
-  const onAuthChange = React.useCallback((user) => {
-    setShow(user?.id)
+  const onAuthChange = React.useCallback((user: any) => {
+    if (!user) {
+      setShow(false)
+      return
+    } else {
+      user.roles.includes('admin') ? setShow(true) : setShow(false)
+    }
   }, [])
 
   return (

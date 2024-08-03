@@ -32,8 +32,8 @@ export const ContentBlock: React.FC<
 
             return (
               <div
-                className={cn(`col-span-4 lg:col-span-${colsSpanClasses[size]}`, {
-                  'md:col-span-2': size !== 'full',
+                className={cn(`col-span-4  lg:col-span-${colsSpanClasses[size]}`, {
+                  'md:col-span-2 border p-6 rounded-xl grid gap-3': size !== 'full',
                 })}
                 key={index}
               >

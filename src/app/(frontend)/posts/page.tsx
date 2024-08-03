@@ -5,7 +5,6 @@ import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
-import React from 'react'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -47,6 +46,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: `Fixing Health Posts`,
   }
 }

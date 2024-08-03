@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 
 import { cn } from '@/utilities/cn'
 import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 import { AdminBar } from '../components/AdminBar'
@@ -14,22 +13,36 @@ import { InitTheme } from '../providers/Theme/InitTheme'
 import { mergeOpenGraph } from '../utilities/mergeOpenGraph'
 import './globals.css'
 
+import { Toaster } from '@/components/ui/sonner'
+import { Manrope } from 'next/font/google'
+import './globals.css'
+
+const ManropeFont = Manrope({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+})
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
+    <html
+      className={cn(ManropeFont.className, GeistMono.variable)}
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body>
+      <body className="flex flex-col min-h-svh">
         <Providers>
           <AdminBar />
           <LivePreviewListener />
 
           <Header />
-          {children}
+          <div className="flex-1">{children}</div>
           <Footer />
+          <Toaster richColors position="top-center" />
         </Providers>
       </body>
     </html>
