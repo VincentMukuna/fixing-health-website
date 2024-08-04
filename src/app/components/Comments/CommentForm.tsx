@@ -1,0 +1,102 @@
+'use client'
+import { useAuth } from '@/providers/Auth/auth-provider'
+import { cn } from '@/utilities/cn'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useCallback } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { Button, buttonVariants } from '../ui/button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
+import { Textarea } from '../ui/textarea'
+
+const createCommentSchema = z.object({
+  comment: z.string().min(1),
+})
+
+type CommentFormProps = {
+  docId: string | number
+}
+
+export default function CommentForm({ docId }: CommentFormProps) {
+  const { user } = useAuth()
+  const pathname = usePathname()
+  const { reset, ...form } = useForm<z.infer<typeof createCommentSchema>>({
+    resolver: zodResolver(createCommentSchema),
+    defaultValues: {
+      comment: '',
+    },
+  })
+
+  const onSubmit = useCallback(
+    async (data: z.infer<typeof createCommentSchema>) => {
+      if (!user) return
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/comments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: 'draft',
+            doc: docId,
+            user: user.id,
+            comment: data.comment,
+          }),
+        })
+
+        const json: Comment & {
+          message?: string
+        } = await res.json()
+
+        if (!res.ok) {
+          throw new Error(json.message)
+        }
+
+        toast.success('Success', { description: 'Comment submitted for moderation successfully.' })
+        reset()
+      } catch (error) {
+        toast.error('Something went wrong!', { description: error.message })
+      }
+    },
+    [user, docId, reset],
+  )
+
+  return (
+    <Form {...form} reset={reset}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-3 py-4">
+          <FormField
+            control={form.control}
+            name="comment"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="Share your thoughts and feedback with the community."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {user ? (
+            <Button type="submit" disabled={form.formState.isLoading} className="self-start">
+              {form.formState.isLoading ? 'Processing' : 'Submit'}
+            </Button>
+          ) : (
+            <Link
+              href={`/login?redirect=${encodeURIComponent(pathname)}`}
+              className={cn(buttonVariants(), 'self-start')}
+            >
+              Login to comment
+            </Link>
+          )}
+        </div>
+      </form>
+    </Form>
+  )
+}

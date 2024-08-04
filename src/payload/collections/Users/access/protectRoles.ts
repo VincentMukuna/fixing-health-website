@@ -5,7 +5,10 @@ import type { User } from 'src/payload-types'
 // ensure there is always a `user` role
 // do not let non-admins change roles
 export const protectRoles: FieldHook<User & { id: string }> = async ({ req, data }) => {
-  const isAdmin = req.user?.roles.includes('admin') || data.email === 'demo@payloadcms.com' // for the seed script
+  const isAdmin =
+    req.user?.roles.includes('admin') ||
+    data.email === 'demo@payloadcms.com' || // for the seed script
+    data.email === 'admin@fixinghealth.com' // for creating first user
 
   if (!isAdmin) {
     return ['user']

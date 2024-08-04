@@ -9,7 +9,7 @@ import { protectRoles } from './access/protectRoles'
 const Users: CollectionConfig = {
   slug: 'users',
   access: {
-    admin: ({ req: { user } }) => checkRole(['admin', 'author', 'contributor'], user),
+    admin: ({ req: { user } }) => checkRole(['admin', 'author', 'contributor', 'editor'], user),
     create: adminsOrAnon,
     delete: admin,
     read: adminsAndUser,
@@ -37,6 +37,10 @@ const Users: CollectionConfig = {
         {
           label: 'Admin',
           value: 'admin',
+        },
+        {
+          label: 'Editor',
+          value: 'editor',
         },
         {
           label: 'Author',

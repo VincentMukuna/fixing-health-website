@@ -20,11 +20,13 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp' // editor-import
 import { fileURLToPath } from 'url'
 
+import { Logo } from '@/components/Logo/Logo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { Page, Post } from 'src/payload-types'
 import admin from './payload/access/admin'
 import { anyone } from './payload/access/anyone'
 import Categories from './payload/collections/Categories'
+import Comments from './payload/collections/Comments'
 import { Media } from './payload/collections/Media'
 import { Pages } from './payload/collections/Pages'
 import { Posts } from './payload/collections/Posts'
@@ -51,6 +53,9 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
 
 export default buildConfig({
   admin: {
+    meta: {
+      titleSuffix: '- Fixing Health',
+    },
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below and the import `BeforeLogin` statement on line 15.
@@ -58,6 +63,9 @@ export default buildConfig({
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
       beforeDashboard: [BeforeDashboard],
+      graphics: {
+        Logo: Logo,
+      },
     },
     user: Users.slug,
     livePreview: {
@@ -120,7 +128,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Media, Categories, Users, Comments],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [

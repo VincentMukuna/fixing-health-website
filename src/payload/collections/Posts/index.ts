@@ -36,7 +36,23 @@ export const Posts: CollectionConfig = {
     create: adminsAndCreators,
     delete: adminsAndAuthors,
     read: authenticatedOrPublished,
-    update: adminsAndAuthors,
+    update: ({ req: { user } }) => {
+      if (user) {
+        //Admins and editors can update any post
+        if (checkRole(['admin', 'editor'], user)) {
+          return true
+        }
+
+        //Authors can only update their own posts
+        return {
+          authors: {
+            contains: user.id,
+          },
+        }
+      }
+
+      return false
+    },
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],

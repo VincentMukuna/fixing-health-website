@@ -3,7 +3,7 @@ import { checkRole } from '../../../access/checkRole'
 
 const adminsAndCreators: Access = ({ req: { user } }) => {
   if (user) {
-    if (checkRole(['admin', 'author', 'contributor'], user)) {
+    if (checkRole(['admin', 'author', 'contributor', 'editor'], user)) {
       return true
     }
   }

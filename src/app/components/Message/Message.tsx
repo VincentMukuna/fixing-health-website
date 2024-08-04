@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { cn } from '@/utilities/cn'
 import { cva } from 'class-variance-authority'
 import { BadgeAlertIcon, CheckCircleIcon, InfoIcon, TriangleAlertIcon } from 'lucide-react'
 import { Alert, AlertDescription } from '../ui/alert'
@@ -23,18 +24,6 @@ export const Message: React.FC<{
   variant?: 'message' | 'error' | 'success' | 'warning'
   className?: string
 }> = ({ message, variant, className }) => {
-  const getMessageTitle = () => {
-    switch (variant) {
-      case 'error':
-        return 'Error'
-      case 'success':
-        return 'Success'
-      case 'warning':
-        return 'Warning'
-      default:
-        return 'Info'
-    }
-  }
   const getMessageVariant = () => {
     switch (variant) {
       case 'error':
@@ -64,7 +53,7 @@ export const Message: React.FC<{
   if (message) {
     console.log('Variant: ', getMessageVariant())
     return (
-      <Alert variant={getMessageVariant()}>
+      <Alert variant={getMessageVariant()} className={cn('flex items-center', className)}>
         {getMessageIcon()}
         <AlertDescription>{message}</AlertDescription>
       </Alert>

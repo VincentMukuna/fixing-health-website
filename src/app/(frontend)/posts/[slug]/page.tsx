@@ -4,12 +4,11 @@ import { RelatedPosts } from '@/blocks/RelatedPosts'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
-import { draftMode, headers } from 'next/headers'
-import React, { cache } from 'react'
+import { draftMode } from 'next/headers'
+import { cache } from 'react'
 import RichText from 'src/app/components/RichText'
 
-import type { Post } from '../../../../payload-types'
-
+import CommentList from '@/components/Comments/CommentList'
 import { PostHero } from '../../../heros/PostHero'
 import { generateMeta } from '../../../utilities/generateMeta'
 import PageClient from './page.client'
@@ -32,6 +31,19 @@ export default async function Post({ params: { slug = '' } }) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  const payload = await getPayloadHMR({ config: configPromise })
+  const comments = await payload.find({
+    collection: 'comments',
+    draft: false,
+    limit: 10,
+    overrideAccess: false,
+    where: {
+      doc: {
+        equals: post.id,
+      },
+    },
+  })
+
   return (
     <article className="pt-16 pb-16">
       <PageClient />
@@ -49,7 +61,7 @@ export default async function Post({ params: { slug = '' } }) {
             enableGutter={false}
           />
         </div>
-
+        <CommentList commentDocs={comments} docId={post.id} />
         <RelatedPosts
           className="mt-12"
           docs={post.relatedPosts.filter((post) => typeof post === 'object')}

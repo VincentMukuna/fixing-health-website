@@ -38,12 +38,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Providers>
           <AdminBar />
           <LivePreviewListener />
-
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
-          <Toaster richColors position="top-center" />
         </Providers>
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   )

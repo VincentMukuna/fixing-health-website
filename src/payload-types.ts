@@ -16,6 +16,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    comments: Comment;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -280,7 +281,7 @@ export interface Media {
 export interface User {
   id: number;
   name?: string | null;
-  roles?: ('admin' | 'author' | 'contributor' | 'user')[] | null;
+  roles?: ('admin' | 'editor' | 'author' | 'contributor' | 'user')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -516,6 +517,23 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments".
+ */
+export interface Comment {
+  id: number;
+  user?: (number | null) | User;
+  populatedUser?: {
+    id?: string | null;
+    name?: string | null;
+  };
+  doc?: (number | null) | Post;
+  comment?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -351,24 +351,15 @@ export const seed = async ({
         {
           link: {
             type: 'custom',
-            label: 'Admin',
-            url: '/admin',
+            label: 'Posts',
+            url: '/posts',
           },
         },
         {
           link: {
             type: 'custom',
-            label: 'Source Code',
-            newTab: true,
-            url: 'https://github.com/payloadcms/payload/tree/beta/templates/website',
-          },
-        },
-        {
-          link: {
-            type: 'custom',
-            label: 'Payload',
-            newTab: true,
-            url: 'https://payloadcms.com/',
+            label: 'Contact Us',
+            url: '/contact',
           },
         },
       ],

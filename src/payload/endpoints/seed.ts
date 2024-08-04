@@ -5,7 +5,7 @@ import { seed as seedScript } from '../seed'
 export const seed: PayloadHandler = async (req): Promise<Response> => {
   const { payload, user } = req
 
-  if (!user) {
+  if (!user || !user.roles.includes('admin')) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

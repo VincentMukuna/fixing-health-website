@@ -13,44 +13,62 @@ import { useAuth } from '@/providers/Auth/auth-provider'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-const loginSchema = z.object({
+const registerSchema = z.object({
+  name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(8),
 })
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const searchParams = useSearchParams()
   const redirect = useRef(searchParams.get('redirect'))
-  const { login } = useAuth()
+  const { create, login } = useAuth()
   const router = useRouter()
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
     },
   })
+  const [submitting, setSubmitting] = useState(false)
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
-      await login(values as any)
-      toast.success('Logged in successfully')
-      if (redirect?.current) router.push(redirect.current as string)
-      else router.push('/account')
+      setSubmitting(true)
+      await create(values as any)
+      toast('Success', {
+        description: 'Account created successfully. A verification email has been sent.',
+      })
     } catch (e) {
-      toast.error(e.message)
+      toast('Failure', { description: e.message })
     }
+    setSubmitting(false)
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
@@ -77,14 +95,14 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={submitting}>
+            Create Account
           </Button>
 
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="underline">
-              Sign up
+            Have an account?{' '}
+            <Link href="/login" className="underline">
+              Sign in
             </Link>
           </div>
         </div>
