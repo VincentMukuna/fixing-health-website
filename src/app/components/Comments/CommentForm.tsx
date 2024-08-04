@@ -1,4 +1,5 @@
 'use client'
+import { createComment } from '@/actions/comments'
 import { useAuth } from '@/providers/Auth/auth-provider'
 import { cn } from '@/utilities/cn'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,33 +34,15 @@ export default function CommentForm({ docId }: CommentFormProps) {
   const onSubmit = useCallback(
     async (data: z.infer<typeof createCommentSchema>) => {
       if (!user) return
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/comments`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            status: 'draft',
-            doc: docId,
-            user: user.id,
-            comment: data.comment,
-          }),
-        })
-
-        const json: Comment & {
-          message?: string
-        } = await res.json()
-
-        if (!res.ok) {
-          throw new Error(json.message)
+      const promise = createComment({ comment: data.comment, docId }).then((res) => {
+        if (res.success) {
+          reset()
+          toast.success('Success!', { description: res.message })
+        } else {
+          toast.error('Error!', { description: res.message })
         }
-
-        toast.success('Success', { description: 'Comment submitted for moderation successfully.' })
-        reset()
-      } catch (error) {
-        toast.error('Something went wrong!', { description: error.message })
-      }
+      })
+      toast.promise(promise, { loading: 'Submitting comment...' })
     },
     [user, docId, reset],
   )

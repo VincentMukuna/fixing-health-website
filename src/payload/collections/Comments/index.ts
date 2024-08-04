@@ -49,6 +49,7 @@ const Comments: CollectionConfig = {
         comment?.doc && typeof comment?.doc === 'object' ? comment?.doc?.slug : comment?.doc
       }`,
     useAsTitle: 'comment',
+    defaultColumns: ['comment', '_status', 'user', 'doc', 'updatedAt'],
   },
   fields: [
     {

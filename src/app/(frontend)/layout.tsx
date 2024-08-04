@@ -13,6 +13,7 @@ import { InitTheme } from '../providers/Theme/InitTheme'
 import { mergeOpenGraph } from '../utilities/mergeOpenGraph'
 import './globals.css'
 
+import ModalsManager from '@/components/ModalsManager/modals-manager'
 import { Toaster } from '@/components/ui/sonner'
 import { Manrope } from 'next/font/google'
 import './globals.css'
@@ -42,6 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="flex-1">{children}</div>
           <Footer />
         </Providers>
+        <ModalsManager />
         <Toaster richColors position="top-center" />
       </body>
     </html>
