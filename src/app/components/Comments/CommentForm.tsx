@@ -14,11 +14,11 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Textarea } from '../ui/textarea'
 
 const createCommentSchema = z.object({
-  comment: z.string().min(1),
+  comment: z.string().min(1, { message: 'Comment is required' }),
 })
 
 type CommentFormProps = {
-  docId: string | number
+  docId: number
 }
 
 export default function CommentForm({ docId }: CommentFormProps) {

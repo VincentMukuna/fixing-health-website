@@ -26,12 +26,18 @@ export default function CommentItem(props: CommentProps) {
   //only admins and editors can delete comments
   //only admins and editors can mark comments as drafts
   const canDelete = useMemo(
-    () => currentUser.roles.includes('admin') || currentUser.roles.includes('editor'),
-    [currentUser.roles],
+    () =>
+      currentUser
+        ? currentUser.roles.includes('admin') || currentUser.roles.includes('editor')
+        : false,
+    [currentUser],
   )
   const canMarkAsDraft = useMemo(
-    () => currentUser.roles.includes('admin') || currentUser.roles.includes('editor'),
-    [currentUser.roles],
+    () =>
+      currentUser
+        ? currentUser.roles.includes('admin') || currentUser.roles.includes('editor')
+        : false,
+    [currentUser],
   )
 
   const handleDelete = async () => {

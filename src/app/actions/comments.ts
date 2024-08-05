@@ -8,6 +8,12 @@ import { revalidatePath } from 'next/cache'
 export async function createComment(data: { comment: string; docId: number }) {
   const payload = await getPayloadHMR({ config: configPromise })
   const { user } = await getMeUser()
+  if (!user) {
+    return {
+      success: false,
+      message: 'Unauthorized',
+    }
+  }
   try {
     const comment = await payload.create({
       collection: 'comments',
@@ -33,6 +39,13 @@ export async function createComment(data: { comment: string; docId: number }) {
 }
 
 export async function deleteComment({ id }) {
+  const { user } = await getMeUser()
+  if (!user) {
+    return {
+      success: false,
+      message: 'Unauthorized',
+    }
+  }
   const payload = await getPayloadHMR({ config: configPromise })
   try {
     const comment = await payload.delete({
@@ -60,6 +73,13 @@ export async function updateComment({
   id: string | number
   data: { comment?: string; _status?: 'draft' | 'published' }
 }) {
+  const { user } = await getMeUser()
+  if (!user) {
+    return {
+      success: false,
+      message: 'Unauthorized',
+    }
+  }
   const payload = await getPayloadHMR({ config: configPromise })
   try {
     const comment = await payload.update({

@@ -2,11 +2,11 @@ import { BannerBlock } from '@/blocks/Banner'
 import { CallToActionBlock } from '@/blocks/CallToAction'
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code'
 import { MediaBlock } from '@/blocks/MediaBlock'
+import { DefaultNodeTypes, SerializedBlockNode } from '@payloadcms/richtext-lexical'
 import React, { Fragment, JSX } from 'react'
 import { CMSLink } from 'src/app/components/Link'
-import { DefaultNodeTypes, SerializedBlockNode } from '@payloadcms/richtext-lexical'
-import type { BannerBlock as BannerBlockProps } from 'src/payload-types'
 
+import type { Page } from '../../../payload-types'
 import {
   IS_BOLD,
   IS_CODE,
@@ -16,7 +16,6 @@ import {
   IS_SUPERSCRIPT,
   IS_UNDERLINE,
 } from './nodeFormat'
-import type { Page } from '../../../payload-types'
 
 export type NodeTypes =
   | DefaultNodeTypes

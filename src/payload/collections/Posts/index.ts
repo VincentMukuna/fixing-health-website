@@ -36,7 +36,7 @@ export const Posts: CollectionConfig = {
     create: adminsAndCreators,
     delete: adminsAndAuthors,
     read: authenticatedOrPublished,
-    update: ({ req: { user } }) => {
+    update: ({ req: { user }, data }) => {
       if (user) {
         //Admins and editors can update any post
         if (checkRole(['admin', 'editor'], user)) {
@@ -177,6 +177,10 @@ export const Posts: CollectionConfig = {
             return value
           },
         ],
+      },
+      access: {
+        create: ({ req: { user } }) => checkRole(['admin', 'editor'], user),
+        update: ({ req: { user } }) => checkRole(['admin', 'editor'], user),
       },
     },
     {
