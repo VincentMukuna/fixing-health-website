@@ -27,7 +27,7 @@ export const VideoMedia: React.FC<MediaProps> = (props) => {
     return (
       <video
         autoPlay
-        className={cn(videoClassName)}
+        className={cn(videoClassName, 'rounded-lg')}
         controls={false}
         loop
         muted

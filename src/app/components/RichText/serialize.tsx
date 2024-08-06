@@ -1,4 +1,3 @@
-import { BannerBlock } from '@/blocks/Banner'
 import { CallToActionBlock } from '@/blocks/CallToAction'
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code'
 import { MediaBlock } from '@/blocks/MediaBlock'
@@ -6,7 +5,10 @@ import { DefaultNodeTypes, SerializedBlockNode } from '@payloadcms/richtext-lexi
 import React, { Fragment, JSX } from 'react'
 import { CMSLink } from 'src/app/components/Link'
 
-import type { Page } from '../../../payload-types'
+import { BannerBlock } from '@/blocks/Banner'
+import { Spread } from 'lexical'
+import { JsonObject } from 'payload'
+import type { BannerBlock as BannerBlockProps, Page } from '../../../payload-types'
 import {
   IS_BOLD,
   IS_CODE,
@@ -17,12 +19,14 @@ import {
   IS_UNDERLINE,
 } from './nodeFormat'
 
+type BannerBlockPropsJsonObject = Spread<BannerBlockProps, JsonObject>
+
 export type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<
       | Extract<Page['layout'][0], { blockType: 'cta' }>
       | Extract<Page['layout'][0], { blockType: 'mediaBlock' }>
-      | BannerBlockProps
+      | BannerBlockPropsJsonObject
       | CodeBlockProps
     >
 
